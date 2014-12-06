@@ -1,6 +1,9 @@
 machine:
+  timezone:
+    Europe/Berlin
   node:
     version: 0.11.8
+test:
   pre:
     - npm install -g grunt-cli
     - npm link
