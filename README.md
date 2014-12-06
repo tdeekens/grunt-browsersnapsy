@@ -53,3 +53,8 @@ The `browserstack` option object will be passed as the JSON-body in the request 
 0.0.2 Improved error handling with BrowserStack's API
 0.0.3 Handle authentification errors with BrowserStack
 0.0.4 Prettifies logging of status
+0.0.5 Add immediate downloading of available screenshots
+
+## Roadmap
+- Adding support for tunneled connections
+- Automatic image diffing against reference screenshots

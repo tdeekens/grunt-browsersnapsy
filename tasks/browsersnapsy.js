@@ -27,8 +27,9 @@ module.exports = function(grunt) {
       requestStatus,
       downloadScreenshot,
       taskStatus = {
-        ready: [],
+        ready: {},
         quantity: 0,
+        processed: 0,
         done: 0
       },
       pingStatus,
@@ -76,7 +77,9 @@ module.exports = function(grunt) {
           if (log !== false) {
             var response = JSON.parse(data),
                 devices = response.screenshots.map(function(screenshot) {
-                  return screenshot.device;
+                  var orientation = screenshot.orientation || 'portrait';
+
+                  return screenshot.device + ' (' + orientation + ')';
                 });
 
             grunt.log.ok(
@@ -100,12 +103,13 @@ module.exports = function(grunt) {
       }
 
       request.screenshots.forEach(function(screenshot) {
-        if (screenshot.state === 'done') {
+        if (taskStatus.ready[screenshot.id] === undefined && screenshot.state === 'done') {
+          taskStatus.processed++;
           downloadScreenshot(screenshot);
         }
       });
 
-      if (taskStatus.ready.length !== taskStatus.quantity) {
+      if (taskStatus.processed !== taskStatus.quantity) {
         setTimeout(function() {
           requestStatus(request, function(data) {
             pingStatus(JSON.parse(data), false);
@@ -115,36 +119,32 @@ module.exports = function(grunt) {
     };
 
     downloadScreenshot = function(screenshot) {
-      if (taskStatus.ready.indexOf(screenshot.id) >= 0) {
-        return;
+      if (taskStatus.ready[screenshot.id] !== undefined) {
+        return false;
       }
 
-      taskStatus.ready.push(screenshot);
+      taskStatus.ready[screenshot.id] = screenshot;
 
-      if (taskStatus.ready.length <= taskStatus.quantity) {
-        grunt.log.subhead(
-          'Status of screenshots changed: ' +
-          taskStatus.ready.length + ' of ' +
-          taskStatus.quantity +
-          ' ready!'
-        );
-      }
+      grunt.log.subhead(
+        'Status of screenshots changed: ' +
+        taskStatus.processed + ' of ' +
+        taskStatus.quantity +
+        ' ready (' +
+        screenshot.device +
+        ').'
+      );
 
-      if (taskStatus.ready.length === taskStatus.quantity) {
-        taskStatus.ready.forEach(function(screenshot) {
-          wget({
-            url: screenshot.image_url,
-            dest: options.downloadTo
-          }, function() {
-            taskStatus.done++;
+      wget({
+        url: screenshot.image_url,
+        dest: options.downloadTo
+      }, function() {
+        taskStatus.done++;
 
-            if (taskStatus.done === taskStatus.quantity) {
-              grunt.log.ok('All screenshots downloaded!');
-              done();
-            }
-          });
-        });
-      }
+        if (taskStatus.done === taskStatus.quantity) {
+          grunt.log.ok('All screenshots downloaded!');
+          done();
+        }
+      });
     };
 
     requestScreenshots(function(data) {

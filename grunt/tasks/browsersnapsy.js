@@ -36,10 +36,17 @@ module.exports = {
           device: 'Google Nexus 5'
         }, {
           os: 'ios',
-          os_version: '7.0',
+          os_version: '8.0',
           browser_version: null,
           browser: 'Mobile Safari',
-          device: 'iPad 4th'
+          device: 'iPad Air'
+        }, {
+          os: 'ios',
+          os_version: '8.0',
+          browser_version: null,
+          browser: 'Mobile Safari',
+          device: 'iPad Air',
+          orientation: 'landscape'
         }]
       }
     },
