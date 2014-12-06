@@ -131,9 +131,11 @@ module.exports = function(grunt) {
 
     requestScreenshots(function(data) {
       var screenshotRequest = JSON.parse(data);
-
-      if (screenshotRequest.errors) {
-        grunt.log.errorlns('BrowserStack request failed due to: ' + screenshotRequest.errors);
+      
+      if (screenshotRequest.errors || screenshotRequest.message === 'Invalid Request') {
+        grunt.log.errorlns('BrowserStack request failed due to: ' +  screenshotRequest.message || screenshotRequest.errors);
+        done();
+        return false;
       }
 
       taskStatus.quantity = screenshotRequest.screenshots.length;

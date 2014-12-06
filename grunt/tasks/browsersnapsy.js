@@ -5,6 +5,13 @@ module.exports = {
     token: '',
     downloadTo: './test/screenshots/latest/'
   },
+  test: {
+    options: {
+      browserstack: {
+        dry: true
+      }
+    }
+  },
   nba: {
     options: {
       browserstack: {

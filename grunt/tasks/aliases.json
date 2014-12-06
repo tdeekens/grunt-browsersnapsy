@@ -4,7 +4,7 @@
     "nodeunit"
   ],
   "test": [
-    "browsersnapsy",
+    "browsersnapsy:test",
     "nodeunit"
   ],
   "dev": [
