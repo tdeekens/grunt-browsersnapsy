@@ -1,8 +1,10 @@
 # grunt-browsersnapsy
 
-**NOTE: This project is under current development and not available via npm yet!**
+**NOTE: This project is under current development and not fully tested!**
 
 > Grunt task for taking screenshots via the [BrowserStack](http://browserstack.com) screenshot API.
+
+[![NPM](https://nodei.co/npm/grunt-browsersnapsy.png?mini=true)](https://nodei.co/npm/grunt-browsersnapsy/)
 
 [![Build Status](https://travis-ci.org/tdeekens/grunt-browsersnapsy.svg?branch=master)](https://travis-ci.org/tdeekens/grunt-browsersnapsy)
 [![Build Status](https://drone.io/github.com/tdeekens/grunt-browsersnapsy/status.png)](https://drone.io/github.com/tdeekens/grunt-browsersnapsy/latest)
