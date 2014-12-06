@@ -1,0 +1,7 @@
+machine:
+  node:
+    version: 0.11.8
+  pre:
+    - npm install -g grunt-cli
+    - npm link
+    - npm link grunt-browsersnapsy

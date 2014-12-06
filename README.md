@@ -6,6 +6,7 @@
 
 [![Build Status](https://travis-ci.org/tdeekens/grunt-browsersnapsy.svg?branch=master)](https://travis-ci.org/tdeekens/grunt-browsersnapsy)
 [![Build Status](https://drone.io/github.com/tdeekens/grunt-browsersnapsy/status.png)](https://drone.io/github.com/tdeekens/grunt-browsersnapsy/latest)
+[![Circle CI](https://circleci.com/gh/tdeekens/grunt-browsersnapsy/tree/master.svg?style=svg)](https://circleci.com/gh/tdeekens/grunt-browsersnapsy/tree/master)
 
 ## Getting Started
 This plugin requires Grunt `~0.4.2`
