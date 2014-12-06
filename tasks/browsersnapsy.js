@@ -19,6 +19,7 @@ module.exports = function(grunt) {
         browserstack: {},
         waitTime: 0,
         statusDelay: 10,
+        abort: 50,
         user: '',
         token: ''
       }),
@@ -30,10 +31,11 @@ module.exports = function(grunt) {
         ready: {},
         quantity: 0,
         processed: 0,
-        done: 0
+        done: 0,
+        tries: 0
       },
       pingStatus,
-      done = this.async();
+      endTask = this.async();
 
     var
       request = curl.request({
@@ -53,7 +55,7 @@ module.exports = function(grunt) {
       }, function(err, data) {
         if (err) {
           grunt.log.error('Screenshots requested failed.');
-          done();
+          endTask();
         }
 
         grunt.log.subhead('Requesting screenshots finished.');
@@ -71,7 +73,7 @@ module.exports = function(grunt) {
         }, function(err, data) {
           if (err) {
             grunt.log.error('Can not fetch screenshots\' taskStatus.');
-            done();
+            endTask();
           }
 
           if (log !== false) {
@@ -93,6 +95,11 @@ module.exports = function(grunt) {
     };
 
     pingStatus = function(request, log) {
+      if (taskStatus.tries >= options.abort) {
+        grunt.log.errorlns('Aborting, tried ' + options.abort + ' times to get screenshots.');
+        endTask();
+      }
+
       if (log !== false) {
         grunt.log.ok(
           'Pinging status of screenshot requests ' +
@@ -112,6 +119,7 @@ module.exports = function(grunt) {
       if (taskStatus.processed !== taskStatus.quantity) {
         setTimeout(function() {
           requestStatus(request, function(data) {
+            taskStatus.tries++;
             pingStatus(JSON.parse(data), false);
           }, 0, false);
         }, options.statusDelay * 1000);
@@ -142,7 +150,7 @@ module.exports = function(grunt) {
 
         if (taskStatus.done === taskStatus.quantity) {
           grunt.log.ok('All screenshots downloaded!');
-          done();
+          endTask();
         }
       });
     };
@@ -152,13 +160,13 @@ module.exports = function(grunt) {
         var screenshotRequest = JSON.parse(data);
       } catch (exception) {
         grunt.log.errorlns(data);
-        done();
+        endTask();
         return false;
       }
 
       if (screenshotRequest.errors || screenshotRequest.message) {
         grunt.log.errorlns('BrowserStack request failed due to: ' +  screenshotRequest.message || screenshotRequest.errors);
-        done();
+        endTask();
         return false;
       }
 

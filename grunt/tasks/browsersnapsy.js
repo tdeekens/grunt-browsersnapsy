@@ -3,7 +3,8 @@ module.exports = {
   options: {
     user: '',
     token: '',
-    downloadTo: './test/screenshots/latest/'
+    downloadTo: './test/screenshots/latest/',
+    abort: 25
   },
   test: {
     options: {

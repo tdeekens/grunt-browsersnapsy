@@ -42,7 +42,8 @@ options: {
   token: '<access token>',
   downloadTo: '<path to where screenshots should be saved>',
   statusDelay: '<Delay between task polling BrowserStack for the screenshots\' status>',
-  waitTime: '<Initial delay for request to be made>'
+  waitTime: '<Initial delay for request to be made>',
+  abort: '<max number of pings for screenshot (* statusDelay)>'
 }
 ```
 
@@ -54,6 +55,7 @@ The `browserstack` option object will be passed as the JSON-body in the request 
 0.0.3 Handle authentification errors with BrowserStack
 0.0.4 Prettifies logging of status
 0.0.5 Add immediate downloading of available screenshots
+0.0.6 Add support for maximum amount of tries to fetch screenshots
 
 ## Roadmap
 - Adding support for tunneled connections
