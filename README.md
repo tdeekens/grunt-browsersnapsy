@@ -49,3 +49,4 @@ The `browserstack` option object will be passed as the JSON-body in the request 
 ## Release History
 0.0.1 First release - proof of concept
 0.0.2 Improved error handling with BrowserStack's API
+0.0.3 Handle authentification errors with BrowserStack

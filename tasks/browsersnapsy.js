@@ -16,7 +16,7 @@ module.exports = function(grunt) {
     var
       options = this.options({
         urls: [
-          'www.google.de'
+        'www.google.de'
         ],
         downloadTo: '',
         browserstack: {},
@@ -60,13 +60,14 @@ module.exports = function(grunt) {
 
         grunt.log.subhead('Requesting screenshots finished.');
 
-        success(data)
+        success(data);
       });
     };
 
     requestStatus = function(screenshots, success, delay) {
       setTimeout(function() {
         var jobId = screenshots.job_id || screenshots.id;
+
         request({
           url: apiRoot + '/' + jobId
         }, function(err, data) {
@@ -83,7 +84,7 @@ module.exports = function(grunt) {
     pingStatus = function(request) {
       grunt.log.ok('Pinging status of screenshot requests...');
 
-      request.screenshots.forEach(function(screenshot, idx) {
+      request.screenshots.forEach(function(screenshot) {
         if (screenshot.state === 'done') {
           downloadScreenshot(screenshot);
         } else {
@@ -118,7 +119,7 @@ module.exports = function(grunt) {
             url: screenshot.image_url,
             dest: options.downloadTo
           }, function() {
-            taskStatus.done++
+            taskStatus.done++;
 
             if (taskStatus.done === taskStatus.quantity) {
               grunt.log.ok('All screenshots downloaded!');
@@ -130,8 +131,14 @@ module.exports = function(grunt) {
     };
 
     requestScreenshots(function(data) {
-      var screenshotRequest = JSON.parse(data);
-      
+      try {
+        var screenshotRequest = JSON.parse(data);
+      } catch (exception) {
+        grunt.log.errorlns(data);
+        done();
+        return false;
+      }
+
       if (screenshotRequest.errors || screenshotRequest.message === 'Invalid Request') {
         grunt.log.errorlns('BrowserStack request failed due to: ' +  screenshotRequest.message || screenshotRequest.errors);
         done();
