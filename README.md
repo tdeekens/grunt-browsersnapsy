@@ -33,7 +33,16 @@ You can run `grunt browsersnapsy` standalone
 Or add it to an existing task: `grunt.registerTask('test', ['clean', 'browsersnapsy']);`
 
 ### Options
-TBD
+
+```javascript
+options: {
+  user: '<username>',
+  token: '<access token>',
+  downloadTo: '<path to where screenshots should be saved>'
+}
+```
+
+The `browserstack` option object will be passed as the JSON-body in the request to BrowserStack. It can contain anything as specified in the [docs](http://www.browserstack.com/screenshots/api). You might check the example [here](https://github.com/tdeekens/grunt-browsersnapsy/blob/master/grunt/tasks/browsersnapsy.js)
 
 ## Release History
-Under current development no npm relase yet.
+0.0.1 First release - proof of concept

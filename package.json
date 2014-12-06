@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/tdeekens/grunt-browsersnapsy",
   "dependencies": {
+    "curlrequest": "^0.5.1",
+    "wgetjs": "^0.3.3"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
