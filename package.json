@@ -1,6 +1,6 @@
 {
   "name": "grunt-browsersnapsy",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A grunt plugin to take screenshots via BrowserStack.",
   "scripts": {
     "test": "grunt test"

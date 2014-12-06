@@ -22,6 +22,24 @@ module.exports = {
           browser_version: null,
           browser: 'Mobile Safari',
           device: 'iPhone 6 Plus'
+        }, {
+          os: 'ios',
+          os_version: '8.0',
+          browser_version: null,
+          browser: 'Mobile Safari',
+          device: 'iPad Mini 2'
+        }, {
+          os: 'android',
+          os_version: '5.0',
+          browser_version: null,
+          browser: 'Android',
+          device: 'Google Nexus 5'
+        }, {
+          os: 'ios',
+          os_version: '7.0',
+          browser_version: null,
+          browser: 'Mobile Safari',
+          device: 'iPad 4th'
         }]
       }
     },

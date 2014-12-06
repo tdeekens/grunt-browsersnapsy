@@ -15,13 +15,10 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('browsersnapsy', 'Take screenshots via BrowserStack.', function() {
     var
       options = this.options({
-        urls: [
-        'www.google.de'
-        ],
         downloadTo: '',
         browserstack: {},
         waitTime: 0,
-        statusDelay: 5,
+        statusDelay: 10,
         user: '',
         token: ''
       }),
@@ -64,7 +61,7 @@ module.exports = function(grunt) {
       });
     };
 
-    requestStatus = function(screenshots, success, delay) {
+    requestStatus = function(screenshots, success, delay, log) {
       setTimeout(function() {
         var jobId = screenshots.job_id || screenshots.id;
 
@@ -76,27 +73,45 @@ module.exports = function(grunt) {
             done();
           }
 
+          if (log !== false) {
+            var response = JSON.parse(data),
+                devices = response.screenshots.map(function(screenshot) {
+                  return screenshot.device;
+                });
+
+            grunt.log.ok(
+              'Requests successfully made for: ' + devices + '.'
+            );
+          }
+
           success(data);
         });
       }, delay || options.waitTime * 1000);
     };
 
-    pingStatus = function(request) {
-      grunt.log.ok('Pinging status of screenshot requests...');
+    pingStatus = function(request, log) {
+      if (log !== false) {
+        grunt.log.ok(
+          'Pinging status of screenshot requests ' +
+          '(every ' + options.statusDelay + ' secs).'
+        );
+      } else {
+        grunt.log.write('...');
+      }
 
       request.screenshots.forEach(function(screenshot) {
         if (screenshot.state === 'done') {
           downloadScreenshot(screenshot);
-        } else {
-          if (taskStatus.ready.length !== taskStatus.quantity) {
-            setTimeout(function() {
-              requestStatus(request, function(data) {
-                pingStatus(JSON.parse(data));
-              }, 0);
-            }, options.statusDelay * 1000);
-          }
         }
       });
+
+      if (taskStatus.ready.length !== taskStatus.quantity) {
+        setTimeout(function() {
+          requestStatus(request, function(data) {
+            pingStatus(JSON.parse(data), false);
+          }, 0, false);
+        }, options.statusDelay * 1000);
+      }
     };
 
     downloadScreenshot = function(screenshot) {
@@ -106,12 +121,14 @@ module.exports = function(grunt) {
 
       taskStatus.ready.push(screenshot);
 
-      grunt.log.subhead(
-        'Status of screenshots changed: ' +
-        taskStatus.ready.length + ' of ' +
-        taskStatus.quantity +
-        ' ready!'
-      );
+      if (taskStatus.ready.length <= taskStatus.quantity) {
+        grunt.log.subhead(
+          'Status of screenshots changed: ' +
+          taskStatus.ready.length + ' of ' +
+          taskStatus.quantity +
+          ' ready!'
+        );
+      }
 
       if (taskStatus.ready.length === taskStatus.quantity) {
         taskStatus.ready.forEach(function(screenshot) {
@@ -139,7 +156,7 @@ module.exports = function(grunt) {
         return false;
       }
 
-      if (screenshotRequest.errors || screenshotRequest.message === 'Invalid Request') {
+      if (screenshotRequest.errors || screenshotRequest.message) {
         grunt.log.errorlns('BrowserStack request failed due to: ' +  screenshotRequest.message || screenshotRequest.errors);
         done();
         return false;

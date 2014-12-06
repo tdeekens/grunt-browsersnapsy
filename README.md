@@ -40,7 +40,9 @@ Or add it to an existing task: `grunt.registerTask('test', ['clean', 'browsersna
 options: {
   user: '<username>',
   token: '<access token>',
-  downloadTo: '<path to where screenshots should be saved>'
+  downloadTo: '<path to where screenshots should be saved>',
+  statusDelay: '<Delay between task polling BrowserStack for the screenshots\' status>',
+  waitTime: '<Initial delay for request to be made>'
 }
 ```
 
@@ -50,3 +52,4 @@ The `browserstack` option object will be passed as the JSON-body in the request 
 0.0.1 First release - proof of concept
 0.0.2 Improved error handling with BrowserStack's API
 0.0.3 Handle authentification errors with BrowserStack
+0.0.4 Prettifies logging of status
