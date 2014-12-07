@@ -50,6 +50,10 @@ options: {
 
 The `browserstack` option object will be passed as the JSON-body in the request to BrowserStack. It can contain anything as specified in the [docs](http://www.browserstack.com/screenshots/api). You might check the example [here](https://github.com/tdeekens/grunt-browsersnapsy/blob/master/grunt/tasks/browsersnapsy.js). For local tunnled testing please refer to [node-BrowserStackTunnel](https://github.com/pghalliday/node-BrowserStackTunnel) and the local testing documentation at [BrowserStack](http://www.browserstack.com/local-testing#config-localhost).
 
+## Developing & Contributing
+
+Developing on the task alone is fairly easy just `git clone https://github.com/tdeekens/grunt-browsersnapsy.git` then `cd grunt-browsersnapsy`. From there one has to link the package to itself via `npm link && npm link grunt-browsersnapsy` which will allow for calling `grunt dev`. Now just work the `task/browsersnapsy.js` and check results - feel free to submit a pull-request!
+
 ## Release History
 0.0.1 First release - proof of concept
 0.0.2 Improved error handling with BrowserStack's API
