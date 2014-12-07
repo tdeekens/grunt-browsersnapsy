@@ -9,13 +9,15 @@
 'use strict';
 
 var curl = require('curlrequest'),
-    wget = require('wgetjs');
+    wget = require('wgetjs'),
+    BrowserStackTunnel = require('browserstacktunnel-wrapper');
 
 module.exports = function(grunt) {
   grunt.registerMultiTask('browsersnapsy', 'Take screenshots via BrowserStack.', function() {
     var
       options = this.options({
         downloadTo: '',
+        tunnel: false,
         browserstack: {},
         waitTime: 0,
         statusDelay: 10,
@@ -24,6 +26,9 @@ module.exports = function(grunt) {
         token: ''
       }),
       apiRoot = 'http://www.browserstack.com/screenshots',
+      initializeTunnel,
+      closeTunnel,
+      tunnel,
       requestScreenshots,
       requestStatus,
       downloadScreenshot,
@@ -49,12 +54,53 @@ module.exports = function(grunt) {
         stderr: true
       });
 
+    initializeTunnel = function(finished) {
+      var isTunnelRequested = (
+        typeof options.tunnel === 'object' &&
+        options.tunnel.key &&
+        options.tunnel.hosts.length > 0
+      );
+
+      if (!isTunnelRequested) {
+        finished();
+        return false;
+      }
+
+      tunnel = new BrowserStackTunnel(options.tunnel);
+
+      tunnel.start(function(error) {
+        if (error) {
+          grunt.log.errorlns('Could not create tunnel(s) due to: ' + error + '.');
+          closeTunnel();
+          endTask();
+        } else {
+          grunt.log.ok('Successfully created tunnel(s)!');
+          finished();
+        }
+      });
+    };
+
+    closeTunnel = function() {
+      if (tunnel !== undefined) {
+        tunnel.stop(function(error) {
+          if (error) {
+            grunt.log.errorlns('Could not close tunnel(s) due to: ' + error + '.');
+          } else {
+            grunt.log.ok('Successfully closed tunnel(s)!');
+          }
+        });
+      }
+    };
+
     requestScreenshots = function(success) {
+      if (options.browserstack.dry_run === true) { success(); }
+
       request({
         data: JSON.stringify(options.browserstack)
       }, function(err, data) {
         if (err) {
           grunt.log.error('Screenshots requested failed.');
+          closeTunnel();
           endTask();
         }
 
@@ -73,15 +119,17 @@ module.exports = function(grunt) {
         }, function(err, data) {
           if (err) {
             grunt.log.error('Can not fetch screenshots\' taskStatus.');
+            closeTunnel();
             endTask();
           }
 
           if (log !== false) {
             var response = JSON.parse(data),
                 devices = response.screenshots.map(function(screenshot) {
+                  var device = screenshot.device || screenshot.os + '' + screenshot.browser + screenshot.browser_version;
                   var orientation = screenshot.orientation || 'portrait';
 
-                  return screenshot.device + ' (' + orientation + ')';
+                  return device + ' (' + orientation + ')';
                 });
 
             grunt.log.ok(
@@ -97,6 +145,7 @@ module.exports = function(grunt) {
     pingStatus = function(request, log) {
       if (taskStatus.tries >= options.abort) {
         grunt.log.errorlns('Aborting, tried ' + options.abort + ' times to get screenshots.');
+        closeTunnel();
         endTask();
       }
 
@@ -150,32 +199,37 @@ module.exports = function(grunt) {
 
         if (taskStatus.done === taskStatus.quantity) {
           grunt.log.ok('All screenshots downloaded!');
+          closeTunnel();
           endTask();
         }
       });
     };
 
-    requestScreenshots(function(data) {
-      try {
-        var screenshotRequest = JSON.parse(data);
-      } catch (exception) {
-        grunt.log.errorlns(data);
-        endTask();
-        return false;
-      }
+    initializeTunnel(function() {
+      requestScreenshots(function(data) {
+        try {
+          var screenshotRequest = JSON.parse(data);
+        } catch (exception) {
+          grunt.log.errorlns(data);
+          closeTunnel();
+          endTask();
+          return false;
+        }
 
-      if (screenshotRequest.errors || screenshotRequest.message) {
-        grunt.log.errorlns('BrowserStack request failed due to: ' +  screenshotRequest.message || screenshotRequest.errors);
-        endTask();
-        return false;
-      }
+        if (screenshotRequest.errors || screenshotRequest.message) {
+          grunt.log.errorlns('BrowserStack request failed due to: ' +  screenshotRequest.message || screenshotRequest.errors);
+          closeTunnel();
+          endTask();
+          return false;
+        }
 
-      taskStatus.quantity = screenshotRequest.screenshots.length;
+        taskStatus.quantity = screenshotRequest.screenshots.length;
 
-      requestStatus(screenshotRequest, function(data) {
-        var request = JSON.parse(data);
+        requestStatus(screenshotRequest, function(data) {
+          var request = JSON.parse(data);
 
-        pingStatus(request);
+          pingStatus(request);
+        });
       });
     });
   });

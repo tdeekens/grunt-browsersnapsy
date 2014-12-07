@@ -4,17 +4,54 @@ module.exports = {
     user: '',
     token: '',
     downloadTo: './test/screenshots/latest/',
-    abort: 25
+    abort: 25,
+    tunnel: {
+      key: '',
+      hosts: [{
+        name: 'http://localhost',
+        port: 80,
+        sslFlag: 0
+      }]
+    }
   },
   test: {
     options: {
       browserstack: {
-        dry: true
+        dry_run: true
+      },
+      tunnel: false
+    }
+  },
+  local: {
+    options: {
+      browserstack: {
+        url: 'http://localhost',
+        browsers: [{
+          os: 'Windows',
+          os_version: '7',
+          browser_version: '8.0',
+          browser: 'ie'
+        }]
+      }
+    }
+  },
+  google: {
+    options: {
+      tunnel: false,
+      browserstack: {
+        url: 'http://google.com',
+        browsers: [{
+          os: 'Windows',
+          os_version: '7',
+          browser_version: '8.0',
+          browser: 'ie'
+        }]
       }
     }
   },
   nba: {
     options: {
+      tunnel: false,
       browserstack: {
         url: 'http://nba.com',
         browsers: [{
@@ -49,19 +86,6 @@ module.exports = {
           device: 'iPad Air',
           orientation: 'landscape'
         }]
-      }
-    },
-    google: {
-      options: {
-        browserstack: {
-          url: 'http://google.com',
-          browsers: [{
-            os: 'Windows',
-            os_version: '7',
-            browser_version: '8.0',
-            browser: 'ie'
-          }]
-        }
       }
     }
   },

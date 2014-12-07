@@ -8,6 +8,8 @@
     "nodeunit"
   ],
   "dev": [
-    "browsersnapsy"
+    "browsersnapsy:local",
+    "browsersnapsy:nba",
+    "browsersnapsy:google"
   ]
 }

@@ -43,11 +43,12 @@ options: {
   downloadTo: '<path to where screenshots should be saved>',
   statusDelay: '<Delay between task polling BrowserStack for the screenshots\' status>',
   waitTime: '<Initial delay for request to be made>',
-  abort: '<max number of pings for screenshot (* statusDelay)>'
+  abort: '<max number of pings for screenshot (* statusDelay)>',
+  tunnel: '<passed to node-BrowserStackTunnel>'
 }
 ```
 
-The `browserstack` option object will be passed as the JSON-body in the request to BrowserStack. It can contain anything as specified in the [docs](http://www.browserstack.com/screenshots/api). You might check the example [here](https://github.com/tdeekens/grunt-browsersnapsy/blob/master/grunt/tasks/browsersnapsy.js)
+The `browserstack` option object will be passed as the JSON-body in the request to BrowserStack. It can contain anything as specified in the [docs](http://www.browserstack.com/screenshots/api). You might check the example [here](https://github.com/tdeekens/grunt-browsersnapsy/blob/master/grunt/tasks/browsersnapsy.js). For local tunnled testing please refer to [node-BrowserStackTunnel](https://github.com/pghalliday/node-BrowserStackTunnel) and the local testing documentation at [BrowserStack](http://www.browserstack.com/local-testing#config-localhost).
 
 ## Release History
 0.0.1 First release - proof of concept
@@ -56,7 +57,7 @@ The `browserstack` option object will be passed as the JSON-body in the request 
 0.0.4 Prettifies logging of status
 0.0.5 Add immediate downloading of available screenshots
 0.0.6 Add support for maximum amount of tries to fetch screenshots
+0.1.0 Add support for local testing (tunneling)
 
 ## Roadmap
-- Adding support for tunneled connections
 - Automatic image diffing against reference screenshots
