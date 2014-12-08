@@ -55,13 +55,13 @@ The `browserstack` option object will be passed as the JSON-body in the request 
 Developing on the task alone is fairly easy just `git clone https://github.com/tdeekens/grunt-browsersnapsy.git` then `cd grunt-browsersnapsy`. From there one has to link the package to itself via `npm link && npm link grunt-browsersnapsy` which will allow for calling `grunt dev`. Now just work the `task/browsersnapsy.js` and check results - feel free to submit a pull-request!
 
 ## Release History
-0.0.1 First release - proof of concept
-0.0.2 Improved error handling with BrowserStack's API
-0.0.3 Handle authentification errors with BrowserStack
-0.0.4 Prettifies logging of status
-0.0.5 Add immediate downloading of available screenshots
-0.0.6 Add support for maximum amount of tries to fetch screenshots
-0.1.0 Add support for local testing (tunneling)
+- 0.0.1 First release - proof of concept
+- 0.0.2 Improved error handling with BrowserStack's API
+- 0.0.3 Handle authentification errors with BrowserStack
+- 0.0.4 Prettifies logging of status
+- 0.0.5 Add immediate downloading of available screenshots
+- 0.0.6 Add support for maximum amount of tries to fetch screenshots
+- 0.1.0 Add support for local testing (tunneling)
 
 ## Roadmap
 - Automatic image diffing against reference screenshots
