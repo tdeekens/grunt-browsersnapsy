@@ -26,6 +26,7 @@ module.exports = {
     options: {
       browserstack: {
         url: 'http://localhost',
+        local: true,
         browsers: [{
           os: 'Windows',
           os_version: '7',
