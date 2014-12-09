@@ -126,7 +126,7 @@ module.exports = function(grunt) {
           if (log !== false) {
             var response = JSON.parse(data),
                 devices = response.screenshots.map(function(screenshot) {
-                  var device = screenshot.device || screenshot.os + '' + screenshot.browser + screenshot.browser_version;
+                  var device = screenshot.device || screenshot.os + ' - ' + screenshot.browser + screenshot.browser_version;
                   var orientation = screenshot.orientation || 'portrait';
 
                   return device + ' (' + orientation + ')';
@@ -182,12 +182,14 @@ module.exports = function(grunt) {
 
       taskStatus.ready[screenshot.id] = screenshot;
 
+      var device = screenshot.device || screenshot.os + ' - ' + screenshot.browser + screenshot.browser_version;
+
       grunt.log.subhead(
         'Status of screenshots changed: ' +
         taskStatus.processed + ' of ' +
         taskStatus.quantity +
         ' ready (' +
-        screenshot.device +
+        device +
         ').'
       );
 

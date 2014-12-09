@@ -4,7 +4,8 @@ module.exports = {
     user: '',
     token: '',
     downloadTo: './test/screenshots/latest/',
-    abort: 25,
+    abort: 50,
+    statusDelay: 30,
     tunnel: {
       key: '',
       hosts: [{
@@ -27,6 +28,7 @@ module.exports = {
       browserstack: {
         url: 'http://localhost',
         local: true,
+        wait_time: 5,
         browsers: [{
           os: 'Windows',
           os_version: '7',
