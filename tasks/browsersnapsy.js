@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         user: '',
         token: ''
       }),
-      apiRoot = 'http://www.browserstack.com/screenshots',
+      apiRoot = 'https://www.browserstack.com/screenshots',
       initializeTunnel,
       closeTunnel,
       tunnel,

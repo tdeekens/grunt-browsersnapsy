@@ -3,3 +3,4 @@ npm-debug.log
 .tmp
 --location
 test/screenshots/
+.idea/
