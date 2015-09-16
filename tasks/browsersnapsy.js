@@ -10,6 +10,8 @@
 
 var curl = require('curlrequest'),
     wget = require('wgetjs'),
+    path = require('path'),
+    mkdirp = require('mkdirp'),
     BrowserStackTunnel = require('browserstacktunnel-wrapper');
 
 module.exports = function(grunt) {
@@ -25,7 +27,7 @@ module.exports = function(grunt) {
         user: '',
         token: ''
       }),
-      apiRoot = 'http://www.browserstack.com/screenshots',
+      apiRoot = 'https://www.browserstack.com/screenshots',
       initializeTunnel,
       closeTunnel,
       tunnel,
@@ -115,7 +117,7 @@ module.exports = function(grunt) {
         var jobId = screenshots.job_id || screenshots.id;
 
         request({
-          url: apiRoot + '/' + jobId
+          url: apiRoot + '/' + jobId + ".json"
         }, function(err, data) {
           if (err) {
             grunt.log.error('Can not fetch screenshots\' taskStatus.');
@@ -193,18 +195,33 @@ module.exports = function(grunt) {
         ').'
       );
 
-      wget({
-        url: screenshot.image_url,
-        dest: options.downloadTo
-      }, function() {
-        taskStatus.done++;
+      var savePath = path.join(
+        options.downloadTo,
+        screenshot.device.replace(/ /g, "_") + "_" +
+        screenshot.os + "_" +
+        screenshot.os_version + "_" +
+        screenshot.browser + "_" +
+        screenshot.browser_version + ".png"
+      );
 
-        if (taskStatus.done === taskStatus.quantity) {
-          grunt.log.ok('All screenshots downloaded!');
-          closeTunnel();
-          endTask();
-        }
+      // Ensure downloadTo exists
+      mkdirp(options.downloadTo, function(err) {
+
+        wget({
+          url: screenshot.image_url,
+          dest: savePath
+        }, function() {
+          taskStatus.done++;
+
+          if (taskStatus.done === taskStatus.quantity) {
+            grunt.log.ok('All screenshots downloaded!');
+            closeTunnel();
+            endTask();
+          }
+        });
+
       });
+
     };
 
     initializeTunnel(function() {
