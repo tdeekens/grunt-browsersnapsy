@@ -195,21 +195,17 @@ module.exports = function(grunt) {
         ').'
       );
 
-      var savePath = path.join(
-        options.downloadTo,
-        screenshot.device.replace(/ /g, "_") + "_" +
-        screenshot.os + "_" +
-        screenshot.os_version + "_" +
-        screenshot.browser + "_" +
-        screenshot.browser_version + ".png"
-      );
+      var generateScreenshotPath = function(screenshot, downloadTo) {
+        var imageUrlArray = screenshot.image_url.split("/");
+        return path.join(downloadTo, imageUrlArray[5]);
+      };
 
       // Ensure downloadTo exists
       mkdirp(options.downloadTo, function(err) {
 
         wget({
           url: screenshot.image_url,
-          dest: savePath
+          dest: generateScreenshotPath(screenshot, options.downloadTo)
         }, function() {
           taskStatus.done++;
 
