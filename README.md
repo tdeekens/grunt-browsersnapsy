@@ -62,6 +62,7 @@ Developing on the task alone is fairly easy just `git clone https://github.com/t
 - 0.1.0 Add support for local testing (tunneling)
 - 0.1.1 Improves logging of screenhots' status
 - 0.1.2 Fix apiRoot for BrowserStack and ensure that `downloadTo` exists
+- 0.1.3 Add auto screenshot path generation
 
 ## Roadmap
 - Automatic image diffing against reference screenshots
